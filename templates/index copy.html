@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="NFL Dashboard Project" />
+        <meta name="author" content="Omicron's team" />
+        <title>Omicron's NFL Project</title>
+ 
+         <!-- Reference to D3 -->
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+
+        <!-- Reference to CSS stylesheet -->
+        <link href="../css/styles.css" rel="stylesheet" />
+
+        <!-- Reference to Bootstrap -->
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+        
+        <!-- Reference to Leaflet CSS old version -->
+        <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+        integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+        crossorigin=""/> -->
+
+        <!-- Reference to Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+
+        <!-- Reference to Leaflet JavaScript -->
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+
+
+        <style>
+          /* #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;} */
+            /* #map{position:static; top: 0; right: 0; bottom: 0; left: 0} */
+            /* #map{position:fixed; top: 0; right: 0; bottom: 0; left: 0} */
+            /* #map{position:relative; top: 0; right: 0; bottom: 0; left: 0} */
+            #map{position:absolute; top: 0; right: 0; bottom: 0; left: 0; height: 180px;}
+
+        </style>
+
+        <!-- <style>
+            #map{
+                position: inherit; top: 0;   left: 0;right: 0;
+            }
+        </style> -->
+
+
+    </head>
+    <body class="sb-nav-fixed">
+
+
+        <!-- <div id="map"></div> -->
+        <!-- <p><a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a></p> -->
+        <!-- <script>
+            var map = L.map('map').setView([0, 0], 1);
+            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=3tFJjbW1WqgelOV3jxQI',{
+                tileSize: 512,
+                zoomOffset: -1,
+                minZoom: 1,
+                attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+                crossOrigin: true
+            }).addTo(map);
+        </script> -->
+
+
+
+        <!-- <div id="mapaID"></div> -->
+        <!-- <script>
+            var map = L.map('map').setView([0, 0], 1)
+            L.tileLayer
+        </script> -->
+
+        
+        <!-- <script>
+            var map = L.map('map').setView([37.09, -95.71], 4);
+            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=3tFJjbW1WqgelOV3jxQI',{
+                tileSize: 512,
+                zoomOffset: -1,
+                minZoom: 1,
+                attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+                crossOrigin: true
+            }).addTo(map);
+        </script> -->
+
+
+
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand" href="index.html">Start NFL Dashboard</a>
+            <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        </nav>
+
+
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            
+                            <div class="sb-sidenav-menu-heading">Select by:</div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-award"></i></div>
+                                <!-- Teams -->
+                                <select id="selectedTeam" onchange="optionChanged(this.value)"></select> 
+                            </a>
+                            
+                            <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-clipboard"></i></div>
+                                Coach
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                <select id="selectedCoach" onchange="optionChanged(this.value)"></select> 
+                            </a> -->
+                            
+                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <a class="nav-link" href="charts.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Charts
+                            </a>
+                            <a class="nav-link" href="tables.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Omicron
+                    </div>
+                </nav>
+            </div>
+
+            <!-- <div id="layoutSidenav_content">
+                <div class="container p-3 my-3 border">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div id="map"></div>
+                            <script>
+                                var map = L.map('map').setView([37.09, -95.71], 4);
+                                L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=3tFJjbW1WqgelOV3jxQI',{
+                                    tileSize: 512,
+                                    zoomOffset: -1,
+                                    minZoom: 1,
+                                    attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+                                    crossOrigin: true
+                                }).addTo(map);
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div id="layoutSidenav_content"></div>
+                <main>
+                    <div class="container-fluid">
+                        <!-- Insertar Logo de la NFL con Jumbotron -->
+                        <!-- <div class="jumbotron jumbotron-fluid">
+                        </div> -->
+
+                        <!-- Cards area -->
+                        <div class="row">
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <h4 class="card-header" style="text-align: center;">Team Logo</h4>
+                                    <div class="card-body" style="margin-left: auto; margin-right: auto;">
+                                         <!-- Team Logo -->
+                                        <img class="card-img" src="../images/logo_nfl.png" id="teamLogo" alt="NFL Team Logo" width="300">
+                                    </div>
+                                    <div class="card-footer" style="margin-left: auto; margin-right: auto;" >
+                                        <!-- Insertar el nombre en logo del equipo -->
+                                        <img class="card-img" src="../images/champs_tb.png" id="teamLogoName" alt="NFL Team Name Logo" width="300">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Team Info -->
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <h4 class="card-header" style="text-align: center;">Team Info</h4>
+                                    <div class="card-body" id="teamInfo">
+                                        Official Name: National Football League
+                                    </div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <h6>Season 2020-2021</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Stadium Info -->
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <h4 class="card-header" style="text-align: center;">Stadium Info</h4>
+                                    <div class="card-body" id ="stadiumInfo"></div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <h6>Season 2020-2021</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map area -->
+                        <!-- <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card mb-6">
+                                    <div class="card-header">
+                                        <i class="fas fa-map"></i>
+                                        Stadiums Map
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="map-id" width="100%" height="40"></canvas>
+                                        <div id="map-id"></div>
+                                        <div id="map"></div>
+
+                                        <script>
+                                            var map = L.map('map').setView([0, 0], 8);
+                                            L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=3tFJjbW1WqgelOV3jxQI',{
+                                                tileSize: 512,
+                                                zoomOffset: -1,
+                                                minZoom: 1,
+                                                attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+                                                crossOrigin: true
+                                            }).addTo(map);
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    <!-- <div class="container p-3 my-3 border">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div id="map"></div>
+                                    <script>
+                                        var map = L.map('map').setView([37.09, -95.71], 4);
+                                        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=3tFJjbW1WqgelOV3jxQI',{
+                                            tileSize: 512,
+                                            zoomOffset: -1,
+                                            minZoom: 1,
+                                            attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+                                            crossOrigin: true
+                                        }).addTo(map);
+                                    </script>
+                            </div>
+                    </div> -->
+
+
+                        <div id="map-id"></div>
+                        <!-- API Key -->
+                        <script type="text/javascript" src="../js/config.js"></script>
+                        <!-- Map JavaScript -->
+                        <script type="text/javascript" src="../js/logic.js"></script>
+
+
+                        <!-- Graphics area -->
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-area mr-1"></i>
+                                        Statistics Graphics Line
+                                    </div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar mr-1"></i>
+                                        Statistics Graphics bars
+                                    </div>
+                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Table Area -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table mr-1"></i>
+                                DataTable NFL
+                            </div>
+                            <div class="card-body">                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Office</th>
+                                                <th>Age</th>
+                                                <th>Start date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Office</th>
+                                                <th>Age</th>
+                                                <th>Start date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>                                          
+                                            <tr>
+                                                <td>Donna Snider</td>
+                                                <td>Customer Support</td>
+                                                <td>New York</td>
+                                                <td>27</td>
+                                                <td>2011/01/25</td>
+                                                <td>$112,000</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <!-- D3.js snippet -->
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+
+        <!-- JQuery scripts link -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <!-- Scripts for this index html -->
+        <script src="../js/scripts.js"></script>
+        <!-- Charts Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <!-- Tables Scripts -->
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+        <!-- Demos for Charts and Tables Scripts -->
+        <script src="../assets/demo/chart-area-demo.js"></script>
+        <script src="../assets/demo/chart-bar-demo.js"></script>
+        <script src="../assets/demo/datatables-demo.js"></script>
+        <!-- Functionality Script -->
+        <script type="text/javascript" src="../js/app.js"></script>
+        <!-- API Key -->
+        <!-- <script type="text/javascript" src="../js/config.js"></script> -->
+        <!-- Map JavaScript -->
+        <!-- <script type="text/javascript" src="../js/logic.js"></script> -->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+        <!-- D3 -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script> -->
+
+        <!-- Leaflet JavaScript -->
+        <!-- <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+        integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+        crossorigin=""></script> -->
+
+        
+
+    
+    </body>
+</html>
