@@ -9,10 +9,18 @@ import pymongo
 from scrape_nfl import nfl_dict, stats_dict, bowl_dict
 import os
 
+print(os.getenv('DATABASE_URL',''))
+if os.getenv('DATABASE_URL',''):
+    conn_url = os.environ.get('DATABASE_URL','')
+else:
+    conn_url = "mongodb://localhost:27017"
+
+
 # DEFINE DATABASE AND INSERT CURRENT DATA ---------
 
-conn = os.environ.get('DATABASE_URL','')
+#conn = os.environ.get('DATABASE_URL','')
 #conn = "mongodb://localhost:27017"
+conn = conn_url
 client = pymongo.MongoClient(conn)
 db = client.nfl_db
 db.teams.drop()
@@ -45,8 +53,9 @@ def home():
 
 @app.route("/api/v1.0/teams")
 def rendering_home():
-    conn = os.environ.get('DATABASE_URL','')
+    #conn = os.environ.get('DATABASE_URL','')
     #conn = "mongodb://localhost:27017"
+    conn = conn_url
     #client = pymongo.MongoClient(conn)
     db = client.nfl_db
     for i in db.teams.find():
@@ -58,8 +67,9 @@ def rendering_home():
 
 @app.route("/api/v1.0/stats")
 def rendering_stats():
-    conn = os.environ.get('DATABASE_URL','')
+    #conn = os.environ.get('DATABASE_URL','')
     #conn = "mongodb://localhost:27017"
+    conn = conn_url
     client = pymongo.MongoClient(conn)
     db = client.nfl_db
     for i in db.stats.find():
@@ -71,8 +81,9 @@ def rendering_stats():
 
 @app.route("/api/v1.0/bowl")
 def rendering_bowl():
-    conn = os.environ.get('DATABASE_URL','')
+    #conn = os.environ.get('DATABASE_URL','')
     #conn = "mongodb://localhost:27017"
+    conn = conn_url
     client = pymongo.MongoClient(conn)
     db = client.nfl_db
     for i in db.bowl.find():
