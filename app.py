@@ -18,8 +18,6 @@ else:
 
 # DEFINE DATABASE AND INSERT CURRENT DATA ---------
 
-#conn = os.environ.get('DATABASE_URL','')
-#conn = "mongodb://localhost:27017"
 conn = conn_url
 client = pymongo.MongoClient(conn)
 db = client.nfl_db
@@ -53,8 +51,6 @@ def home():
 
 @app.route("/api/v1.0/teams")
 def rendering_home():
-    #conn = os.environ.get('DATABASE_URL','')
-    #conn = "mongodb://localhost:27017"
     conn = conn_url
     #client = pymongo.MongoClient(conn)
     db = client.nfl_db
@@ -67,8 +63,6 @@ def rendering_home():
 
 @app.route("/api/v1.0/stats")
 def rendering_stats():
-    #conn = os.environ.get('DATABASE_URL','')
-    #conn = "mongodb://localhost:27017"
     conn = conn_url
     client = pymongo.MongoClient(conn)
     db = client.nfl_db
@@ -81,8 +75,6 @@ def rendering_stats():
 
 @app.route("/api/v1.0/bowl")
 def rendering_bowl():
-    #conn = os.environ.get('DATABASE_URL','')
-    #conn = "mongodb://localhost:27017"
     conn = conn_url
     client = pymongo.MongoClient(conn)
     db = client.nfl_db
