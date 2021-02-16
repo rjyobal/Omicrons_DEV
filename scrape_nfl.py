@@ -8,9 +8,9 @@ import pandas as pd
 
 with open('Data/nfl_teams.json') as json_file:
     allteams = json.load(json_file)
-    list_teams=[]
+    list_teams = []
     list_teams.append(allteams)
- 
+
 nfl_dict = {"data": list_teams}
 
 # // DEFINE 2020 DATABASE //
@@ -23,7 +23,7 @@ json.dumps(parsed, indent=4)
 
 stats_dict = {"data": parsed}
 
-# // DEFINE SUPERBOWL DATABASE // 
+# // DEFINE SUPERBOWL DATABASE //
 
 Bowl = pd.read_csv('Data/superbowl.csv', encoding='utf-8')
 result = Bowl.to_json(orient="records")

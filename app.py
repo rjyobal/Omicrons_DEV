@@ -9,9 +9,9 @@ import pymongo
 from scrape_nfl import nfl_dict, stats_dict, bowl_dict
 import os
 
-print(os.getenv('DATABASE_URL',''))
-if os.getenv('DATABASE_URL',''):
-    conn_url = os.environ.get('DATABASE_URL','')
+print(os.getenv('DATABASE_URL', ''))
+if os.getenv('DATABASE_URL', ''):
+    conn_url = os.environ.get('DATABASE_URL', '')
 else:
     conn_url = "mongodb://localhost:27017"
 
@@ -34,6 +34,7 @@ app = Flask(__name__)
 
 # HOME FUNCTION ----------
 
+
 @app.route("/")
 def home():
     # return f"""
@@ -49,6 +50,7 @@ def home():
 
 # CUSTOM TEAMS JSON HOSTING FUNCTION -------------
 
+
 @app.route("/api/v1.0/teams")
 def rendering_home():
     conn = conn_url
@@ -56,10 +58,11 @@ def rendering_home():
     db = client.nfl_db
     for i in db.teams.find():
         return json.dumps(i, indent=4, default=json_util.default)
-    
+
     return jsonify(nfl_dict)
 
 # CUSTOM 2020 STATS JSON HOSTING FUNCTION -------------
+
 
 @app.route("/api/v1.0/stats")
 def rendering_stats():
@@ -73,6 +76,7 @@ def rendering_stats():
 
 # CUSTOM SUPERBOWL JSON HOSTING FUNCTION -------------
 
+
 @app.route("/api/v1.0/bowl")
 def rendering_bowl():
     conn = conn_url
@@ -84,6 +88,7 @@ def rendering_bowl():
     return jsonify(bowl_dict)
 
 # DEBUG FUNCTION ------------
+
 
 if __name__ == "__main__":
     app.run(debug=True)
